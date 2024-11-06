@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# MPI_Parallel_LR <img src="man/figures/logo.png" align="right" height=100/>
+# ParallelForensicLR <img src="man/figures/logo.png" align="right" height=100/>
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -17,7 +17,7 @@ massive short tandem repeat (**STR**) and single nucleotide polymorphism
 (**SNP**) comparisons essential for identifying individuals in complex
 cases.
 
-To address this, we developed **MPI_Parallel_LR** that leverages
+To address this, we developed **ParallelForensicLR** that leverages
 automated ***parallelization technology***, a powerful feature that
 enables the simultaneous use of multiple processors on a single machine.
 By distributing genetic comparison tasks across multiple cores, this
