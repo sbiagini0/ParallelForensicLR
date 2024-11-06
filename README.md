@@ -97,7 +97,7 @@ The script includes a **Mendelian Consistency Check** function for the
 *Family Pedigrees*, which verifies the genetic inheritance patterns
 within each pedigree to ensure no inconsistencies are present.
 
-Additionally, the **mutation rate** can also be set or removed directly
+Additionally, the **Mutation Rate** can also be set or removed directly
 within the script if required for specific analyses.
 
 After these selections, the parallelized genetic comparisons are run
