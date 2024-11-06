@@ -30,13 +30,13 @@ outcomes in genetic searches for missing persons.
 ## Requirements
 
 This script relies on a `Familias3` (.fam) file containing essential
-data such as the *population frequency table* (for STR or SNP markers),
+data such as the *Population Frequency Table* (for STR or SNP markers),
 *Family Pedigrees*, and the *Persons Of Interest* (POIs) to be evaluated
 for potential familial relationships.
 
-- `Familias3` file with the frequency table (STR/SNP) and the
-  Ante-Mortem (AM) and Post-Mortem (PM) genetics profiles. To install
-  the required software, go to this link:
+- `Familias3` file with the _Population Frequency Table_ (STR/SNP) and the
+  Ante-Mortem (AM) and Post-Mortem (PM) genetics profiles.
+  To install the required software, go to this link:
 
 ``` r
 https://familias.no/
@@ -58,13 +58,13 @@ https://familias.no/
     - matrixStats
     - writexl
 
-## A toy MPI/DVI example
+## A toy MPI example
 
-The `toy_MPI/DVI.fam` file included in this repository is a simplified
+The `toy_MPI.fam` file included in this repository is a simplified
 example representing a basic scenario for genetic screening. It is
 structured similarly to real MPI/DVI cases but scaled down for
-demonstration purposes. This file includes a population frequency table
-for South America with **70 STR markers, 15 Family Pedigrees, and 15,000
+demonstration purposes. This file includes a **Population Frequency Table
+from South America with 70 STR markers, 15 Family Pedigrees, and 15,000
 POIs** to be evaluated. Users are encouraged to experiment with this
 example to understand the workflow and adapt the format for larger or
 more complex cases.
@@ -80,8 +80,8 @@ install.packages(c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "s
 ```
 
 2.  **Sample Data**: To perform the calculations, it is necessary to
-    have a pre-configured `Familias3` file containing the frequency
-    table, family pedigrees, and POIs.
+    have a pre-configured `Familias3` file containing the _Frequency
+    Table_, _Family Pedigrees_, and _POIs_.
 
 3.  **Run the Script**: The script automatically detects the `Familias3`
     file in the current directory. Upon execution, all necessary
@@ -122,12 +122,12 @@ This tool provides the likelihood ratio (LR) per pedigree and indicates
 the sex of each POI, it currently lacks some of the advanced output
 features available in `Familias3`. Specifically, the script does not
 include details on the number of markers analyzed or any inconsistencies
-detected within the profiles.
+detected within the _Family Pedigrees_ and _POIs_.
 
 ## Future Tasks
 
 To enhance the usability and accessibility of this script, future
-development will focus on integrating it into a Shiny application. This
+development will focus on integrating it into a **Shiny application**. This
 Shiny app will provide an intuitive graphical user interface (GUI) that
 simplifies data input, parameter selection, and result visualization. By
 transitioning the script to a Shiny app, users will be able to interact
