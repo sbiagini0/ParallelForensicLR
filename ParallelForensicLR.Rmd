@@ -2,7 +2,7 @@
 title: "ParallelForensicLR"
 subtitle: "sbiagini0"
 date: 10/06/2025 
-version: 1.2.0
+version: 1.2
 ---
 
 #import_helpers
