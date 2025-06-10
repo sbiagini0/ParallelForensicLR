@@ -1,16 +1,9 @@
 ---
 title: "ParallelForensicLR"
 subtitle: "sbiagini0"
-date: 13/05/2025 
-version: 1.1
+date: 10/06/2025 
+version: 1.2
 ---
-
-#setup_packages
-```{r setup_packages, include=FALSE}
-packages <- c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "svDialogs", "matrixStats", "writexl")
-load_packages(packages)
-
-```
 
 #import_helpers
 ```{r import_helpers, include=FALSE}
@@ -19,9 +12,17 @@ source("R/ParallelForensicLR_function.R")
 
 ``` 
 
+#setup_packages
+```{r setup_packages, include=FALSE}
+#Load packages.
+packages <- c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "svDialogs", "matrixStats", "writexl")
+load_packages(packages)
+
+```
+
 #read_famfile
 ```{r read_famfile, include=FALSE}
-# Load .fam file with AM and PM.
+#Load .fam file with AM and PM.
 data_dir <- "data"
 fam_file <- list.files(path = data_dir, pattern = "\\.fam$", full.names  = TRUE)
 
@@ -31,13 +32,14 @@ mpi <- read_famfile(fam_file)
 
 #connected_ped
 ```{r connectedPed, include=FALSE}
-##Cheking connected pedigree.
+#Cheking connected pedigree.
 connectedPed(mpi)
 
 ```
 
 #rearrange_ped
 ```{r RearrangePed, include=FALSE}
+#Data structure.
 mpi = pedFormat(mpi)
 mpi = pedNames(mpi)
 
@@ -46,7 +48,7 @@ mpi = pedNames(mpi)
 #mendelian
 ```{r mendelian, include=FALSE}
 #Checking for intrafamilial Mendelian inheritance and removing discrepant markers.
-#mpi = mendelian(mpi)
+mpi = mendelian(mpi)
 
 ``` 
 
@@ -54,10 +56,10 @@ mpi = pedNames(mpi)
 ```{r setting_mut_model, include=FALSE}
 #Setting mutation model.
 #Equal
-#mpi = settingMutModel(mpi, model = "equal", rate = list(female = 0.002, male = 0.002))
+mpi = setMutModel(mpi, model = "equal", rate = list(female = 0.002, male = 0.002))
 
 #Stepwise
-mpi = settingMutModel(mpi, model = "stepwise", rate = list(female = 0.01, male = 0.02), range = 0.1, rate2 = 1e-6)
+#mpi = setMutModel(mpi, model = "stepwise", rate = list(female = 0.01, male = 0.02), range = 0.1, rate2 = 1e-6)
 
 #Removing mutation model.
 #mpi = removeMutModel(mpi)
@@ -83,18 +85,30 @@ print(paste("Family pedigrees selected:", paste(am_selected, collapse = ", ")))
 pm <- mpi$'Unidentified persons'[pm_selected]
 am <- mpi[am_selected]
 
+#rm(mpi)
+
+```
+
+#exclusions_list
+```{r exclusions_list, include=FALSE}
+#Calculate the number of exclusions of each pm and am
+exclusions_list <- computeExclusions(pm, am, maxIncomp = 3, ncores = 31)
+
+file_name = paste0(fam_file[1], "-exclusions_list.RData")
+save(exclusions_list, file = file_name)
+
 ```
 
 #ParallelForensicLR
 ```{r ParallelForensicLR, include=FALSE}
 #Calculate LR with paralelization
-lr_table <- ParallelForensicLR(pm, am, ncores = 3)
+lr_table <- ParallelForensicLR(pm, am, exclusions_list, ncores = 31)
 
 ```
 
 #export_to_xlsx
 ```{r export_to_xlsx, include=FALSE}
-#Export dt to xlsx
-export_to_xlsx(lr_table, fam_file)
+#Export df to xlsx
+export_to_csv(lr_table, fam_file)
 
 ```
