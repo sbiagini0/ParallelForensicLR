@@ -57,11 +57,13 @@ ParallelForensicLR <- function(pm, am, exclusions_list, ncores = parallel::detec
           
           res <- calculate_LR(ref, poi)
           
-          df_temp[fam_id] <- paste0(
-            res[[1]], " (", res[[2]], ") / ",
-            ifelse(is.na(res[[3]]), "NA", res[[3]]),
-            " (", ifelse(is.na(res[[4]]), "NA", res[[4]]), ")"
-          )
+          df_temp[fam_id] <- paste0(res[[1]], " (", res[[2]], ")")
+          
+          # df_temp[fam_id] <- paste0(
+          #   res[[1]], " (", res[[2]], ") / ",
+          #   ifelse(is.na(res[[3]]), "NA", res[[3]]),
+          #   " (", ifelse(is.na(res[[4]]), "NA", res[[4]]), ")"
+          #)
         }
       }
       rm(poi, res)
