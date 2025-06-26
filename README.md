@@ -1,11 +1,11 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ParallelForensicLR
+# 🧬 ParallelForensicLR
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-## Introduction
+## 🔍 Introduction
 
 In the field of **Forensic Genetics**, mainly in *Disaster Victim
 Identification (DVI)* and *Missing Persons Identification (MPI)*,
@@ -26,7 +26,7 @@ will ultimately depend on the machine’s resources, but this parallelized
 approach maximizes computational power to deliver faster, more effective
 outcomes in genetic searches for missing persons.
 
-## Requirements
+## ⚙️ Requirements
 
 This script relies on a `Familias3` (.fam) file containing essential
 data such as the *Population Frequency Table* (for STR or SNP markers),
@@ -52,7 +52,7 @@ for potential familial relationships.
   - **Output data**:
     - matrixStats
 
-## Usage Instructions
+## ▶️ Usage Instructions
 
 **Sample Data**: 
 To perform the calculations, it is necessary to
@@ -81,13 +81,13 @@ install.packages(c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "s
        - **Pedigree Selection**: Choose whether to compare against **all
          available family pedigrees** or restrict the analysis to one or
          several selected families.
-5.  Finally, set the main functions and parameters:
+5.   Finally, set the main functions and parameters:
     - **Inconsistency Filter**: Enter the *maximum number of Mendelian
          inconsistencies* (e.g. `3`) permitted between a _POI_ and a _Family Pedigree_
          for the LR calculation. POIs exceeding this threshold for a given
          family are skipped, accelerating the analysis and reducing noise.
   ``` r
-       computeExclusions(pm, am, maxIncomp = 3, ncores = detectCores() - 1)
+  computeExclusions(pm, am, maxIncomp = 3, ncores = detectCores() - 1)
   ```
   - **Parallelized Genetic Comparisons**:
   The `ParallelForensicLR()` function is the core engine of the workflow. 
@@ -95,7 +95,7 @@ install.packages(c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "s
   and distributes LR calculations across multiple CPU cores for maximum efficiency. 
   For each POI–Family pair that passes the inconsistency filter, it computes the likelihood ratio.
   ``` r
-      ParallelForensicLR(pm, am, exclusions_list, ncores = detectCores() - 1, chunk_size = 500)
+  ParallelForensicLR(pm, am, exclusions_list, ncores = detectCores() - 1, chunk_size = 500)
   ```
 6.    Once calculations are complete, results are saved in an
         _csv file_, with POIs sorted by descending likelihood ratio (LR) for
@@ -103,11 +103,11 @@ install.packages(c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "s
         of the most likely familial matches based on LR values.
   
         The results are then collated into a single, ordered data frame containing:
-  - **POI**: Identifier of the Person of Interest  
-  - **Sex**: Sex of the POI, inferred via `getSexID()`  
-  - **One column per family**: Formatted as `LR_total (nMarkers)`  
+      - **POI**: Identifier of the Person of Interest  
+      - **Sex**: Sex of the POI, inferred via `getSexID()`  
+      - **One column per family**: Formatted as `LR_total (nMarkers)`  
 
-## A toy MPI example
+## 🧪 A toy MPI example
 
 The `toy_MPI.fam` file included in this repository is a simplified
 example representing a basic scenario for genetic screening. It is
@@ -118,7 +118,7 @@ POIs** to be evaluated. Users are encouraged to experiment with this
 example to understand the workflow and adapt the format for larger or
 more complex cases.
 
-## Example Output
+## 📊 Example Output
 
 | POI       | Sex | FAM1          | FAM2 | FAM3 | FAM4 | FAM5          | …   |
 |-----------|-----|---------------|------|------|------|---------------|-----|
@@ -126,7 +126,7 @@ more complex cases.
 | poi_04493 | M   | 4.46E+52 (70) | 0    | 0    | 0    | 0             | …   |
 | …         | …   | …             | …    | …    | …    | …             | …   |
 
-## Future Tasks
+## 🚧 Future Tasks
 
 To enhance the usability and accessibility of this script, future
 development will focus on integrating it into a **Shiny application**. This
