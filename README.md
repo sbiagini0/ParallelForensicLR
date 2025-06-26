@@ -1,7 +1,6 @@
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ParallelForensicLR <img src="man/figures/logo.png" align="right" height=100/>
+# ParallelForensicLR
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -52,7 +51,61 @@ for potential familial relationships.
     - svDialogs
   - **Output data**:
     - matrixStats
-    - writexl
+
+## Usage Instructions
+
+**Sample Data**: 
+To perform the calculations, it is necessary to
+    have a pre-configured `Familias3` file containing the _Frequency
+    Table_, _Family Pedigrees_, and _POIs_.
+
+**Run the Script**: 
+
+1.    Make sure all necessary libraries are installed and loaded before execution
+``` r
+install.packages(c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "svDialogs", "matrixStats")
+``` 
+2.  The script begins by automatically detects the `Familias3`
+     file in "data" folder.
+3.  Once is loaded, there is a precheck step where
+    -   its been evaluated data-integrity check using `connectedPed()`,
+        ensuring that every pedigree forms one connected component.
+    -   standardises the input with `pedFormat()` and `pedNames()`, harmonising order
+        and renaming _POIs_ and _Family Pedigrees_.
+    -   verifies the genetic inheritance patterns within each _Family Pedigrees_
+        to ensure no inconsistencies are present by runing `mendelian()`.
+4.  The script will prompt the user twice:
+       - **POI Selection**: Decide whether to analyse **all Persons of
+         Interest** in the input file or only a specific subset.
+    
+       - **Pedigree Selection**: Choose whether to compare against **all
+         available family pedigrees** or restrict the analysis to one or
+         several selected families.
+5.  Finally, set the main functions and parameters:
+    - **Inconsistency Filter**: Enter the *maximum number of Mendelian
+         inconsistencies* (e.g. `3`) permitted between a _POI_ and a _Family Pedigree_
+         for the LR calculation. POIs exceeding this threshold for a given
+         family are skipped, accelerating the analysis and reducing noise.
+  ``` r
+       computeExclusions(pm, am, maxIncomp = 3, ncores = detectCores() - 1)
+  ```
+  - **Parallelized Genetic Comparisons**:
+  The `ParallelForensicLR()` function is the core engine of the workflow. 
+  It takes the filtered list of _POI_ and _Family Pedigree_, splits the POIs into chunks,
+  and distributes LR calculations across multiple CPU cores for maximum efficiency. 
+  For each POI–Family pair that passes the inconsistency filter, it computes the likelihood ratio.
+  ``` r
+      ParallelForensicLR(pm, am, exclusions_list, ncores = detectCores() - 1, chunk_size = 500)
+  ```
+6.    Once calculations are complete, results are saved in an
+        _csv file_, with POIs sorted by descending likelihood ratio (LR) for
+        easier analysis. This output format allows for quick identification
+        of the most likely familial matches based on LR values.
+  
+        The results are then collated into a single, ordered data frame containing:
+  - **POI**: Identifier of the Person of Interest  
+  - **Sex**: Sex of the POI, inferred via `getSexID()`  
+  - **One column per family**: Formatted as `LR_total (nMarkers)`  
 
 ## A toy MPI example
 
@@ -65,60 +118,13 @@ POIs** to be evaluated. Users are encouraged to experiment with this
 example to understand the workflow and adapt the format for larger or
 more complex cases.
 
-## Usage Instructions
-
-1.  **Ensure Dependencies are Installed**: Before running the script,
-    confirm all required R packages are installed. You may use the
-    following command in your R console to install them:
-
-``` r
-install.packages(c("pedtools", "forrel", "pedmut", "tidyverse", "doParallel", "svDialogs", "matrixStats", "writexl")
-```
-
-2.  **Sample Data**: To perform the calculations, it is necessary to
-    have a pre-configured `Familias3` file containing the _Frequency
-    Table_, _Family Pedigrees_, and _POIs_.
-
-3.  **Run the Script**: The script automatically detects the `Familias3`
-    file in the current directory. Upon execution, all necessary
-    libraries are loaded, and functions are initialized. The script will
-    prompt the user twice:
-
-    - Core Selection: Specify the number of CPU cores to use (the script
-      will indicate the maximum available).
-    - Pedigree Selection: Choose whether to compare against all
-      available pedigrees or only specific ones.
-
-The script includes a **Mendelian Consistency Check** function for the
-*Family Pedigrees*, which verifies the genetic inheritance patterns
-within each pedigree to ensure no inconsistencies are present.
-
-Additionally, the **Mutation Rate** can also be set or removed directly
-within the script if required for specific analyses.
-
-After these selections, the parallelized genetic comparisons are run
-according to the chosen parameters.
-
-4.  **Output**: Once calculations are complete, results are saved in an
-    Excel file, with POIs sorted by descending likelihood ratio (LR) for
-    easier analysis. This output format allows for quick identification
-    of the most likely familial matches based on LR values.
-
 ## Example Output
 
-| POI       | Sex | FAM1     | FAM2 | FAM3 | FAM4 | FAM5     | …   |
-|-----------|-----|----------|------|------|------|----------|-----|
-| poi_13863 | F   | 0        | 0    | 0    | 0    | 2.13E+58 | …   |
-| poi_04493 | M   | 4.46E+52 | 0    | 0    | 0    | 0        | …   |
-| …         | …   | …        | …    | …    | …    | …        | …   |
-
-## Limitations
-
-This tool provides the likelihood ratio (LR) per pedigree and indicates
-the sex of each POI, it currently lacks some of the advanced output
-features available in `Familias3`. Specifically, the script does not
-include details on the number of markers analyzed or any inconsistencies
-detected within the _Family Pedigrees_ and _POIs_.
+| POI       | Sex | FAM1          | FAM2 | FAM3 | FAM4 | FAM5          | …   |
+|-----------|-----|---------------|------|------|------|---------------|-----|
+| poi_13863 | F   | 0             | 0    | 0    | 0    | 2.13E+58 (70) | …   |
+| poi_04493 | M   | 4.46E+52 (70) | 0    | 0    | 0    | 0             | …   |
+| …         | …   | …             | …    | …    | …    | …             | …   |
 
 ## Future Tasks
 
